@@ -1,0 +1,375 @@
+# Index user ID=1
+PUT test/user/1
+{
+    "first_name" : "John",
+    "last_name" :  "Smith",
+    "age" :        25,
+    "about" :      "I love to go rock climbing",
+    "interests": [ "sports", "music" ],
+    "date": "2015-12-18"
+}
+
+# Index user ID=2
+PUT test/user/2
+{
+    "first_name" :  "Jane",
+    "last_name" :   "Smith",
+    "age" :         32,
+    "about" :       "I like to collect rock albums",
+    "interests":  [ "music" ],
+    "date": "2015-12-19"
+}
+
+# Index user ID=3
+PUT test/user/3
+{
+    "first_name" :  "Douglas",
+    "last_name" :   "Fir",
+    "age" :         35,
+    "about":        "I like to build cabinets",
+    "interests":  [ "forestry" ],
+    "date": "2015-12-20"
+}
+
+# Index user ID=4
+PUT test/user/4
+{
+    "first_name" : "Byron",
+    "last_name" :  "Zhang",
+    "age" :        23,
+    "about" :      "I love to go hiking",
+    "interests": [ "movies"],
+    "date": "2015-12-21"
+}
+
+# Index blog ID=1
+PUT /website/blog/1
+{
+  "name": "test for search",
+  "title": "My first blog entry",
+  "content":  "I like movies, how about you?",
+  "date":  "2016/01/01",
+  "tag": ["IT", "programer"],
+  "author": {
+    "email": "xiaoqi_2591@outlook.com",
+    "name": "byron",
+    "age": 24
+  },
+  "viewCouut": 20
+}
+
+# Index blog ID=2
+PUT /website/blog/2
+{
+  "name": "testing for search",
+  "title": "My 1st blog entry, good job",
+  "content":  "I don't like movies, I like hiking?",
+  "date":  "2016/02/02",
+  "tag": ["drama", "search"],
+  "author": {
+    "email": "test@outlook.com",
+    "name": "richard",
+    "age": 23
+  },
+  "viewCouut": 1
+}
+
+# Set 3 primary shards and 3 replica shards
+PUT /test
+{
+   "settings" : {
+      "number_of_shards" : 3,
+      "number_of_replicas" : 1
+   }
+}
+
+# Update refresh_interval
+PUT /website/_settings
+{
+  "refresh_interval": "30s"
+}
+
+# Get settings of index test
+# By default, indices are assigned 5 primary shards
+GET /test/_settings
+
+# Check health of cluster
+GET /_cluster/health
+
+# Set replicas is 2 (primary shards * 2)
+PUT /test/_settings
+{
+   "number_of_replicas" : 2
+}
+
+# Check the status of cluster
+GET /_cluster/state
+
+# Retrieve a document whose ID is 1
+GET /test/user/1?pretty
+
+# Only return source field
+GET /test/user/1/_source
+
+# Retrieve partial document
+GET /test/user/1?_source=first_name,age
+
+# Empty search
+GET /test/user/_search
+
+# Search with Query DSL(domain-specific language)
+GET test/user/_search
+{
+  "query": {
+    "match": {
+      "first_name": "byron"
+
+    }
+  }
+}
+
+# Search lite
+GET /test/user/_search?q=-first_name:byron +interests:music
+
+# Use _all field to query
+GET /test/user/_search?q=(byron john)
+
+# Check whether a document exists
+HEAD /test/user/1
+
+# Reindex data ID=2
+PUT /test/user/2
+{
+    "first_name" : "John",
+    "last_name" :  "Smith",
+    "age" :        27,
+    "about" :      "I love to go rock climbing",
+    "interests": [ "sports", "music" ]
+}
+
+# Append '_create' can check whether there already exists document which holds same ID
+POST /test/user/2/_create
+{
+  "first_name": "John",
+  "last_name": "Smith",
+  "age": 26,
+  "about": "I love to go rock climbing",
+  "interests": ["sports", "music"]
+}
+
+# retrieving multiple documents
+GET /test/user/_mget
+{
+   "docs" : [
+      {
+         "_id" :    2
+      },
+      {
+         "_id" :    1,
+         "_source": "interests"
+      }
+   ]
+}
+
+# For demonstrating mapping and analysising
+# Step 1.
+GET /test/user/_search?q=2015              # 4 results
+GET /test/user/_search?q=2015-12-21        # 4 results !
+GET /test/user/_search?q=date:2015-12-21   # 1 result
+GET /test/user/_search?q=date:2015         # 0 results !
+
+# Step 2.
+GET /test/user/_mapping
+
+# Testing Analyzers
+GET /_analyze?analyzer=standard
+{
+  "text": "Set the shape to semi-transparent by calling set_trans(5)"
+}
+
+GET /_analyze?analyzer=simple
+{
+  "text": "Set the shape to semi-transparent by calling set_trans(5)"
+}
+
+GET /_analyze?analyzer=whitespace
+{
+  "text": "Set the shape to semi-transparent by calling set_trans(5)"
+}
+
+GET /_analyze?analyzer=english
+{
+  "text": "Set the shape to semi-transparent by calling set_trans(5)"
+}
+
+# Update a mapping
+PUT /test/user/_mapping
+{
+  "properties" : {
+      "tag" : {
+        "type" : "string",
+        "index": "not_analyzed"
+      }
+    }
+}
+
+# Test the mapping
+GET /test/_analyze?field=first_name
+{
+  "text":"good-thing"
+}
+
+GET /test/_analyze?field=tag
+{
+  "text":"good-thing"
+}
+
+GET /website/_analyze?field=title
+{
+  "text":"<html>hello, world!</html>"
+}
+
+GET /website/_analyze?field=tag
+{
+  "text":"hello-world"
+}
+
+GET /website/blog/_search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+
+GET /website/blog/_search
+
+# Structure of a query clause
+GET /website/blog/_search
+{
+  "query": {
+    "match": {
+      "tag": "programer"
+    }
+  }
+  , "highlight": {
+    "fields": {
+      "text": {}
+    }
+  }
+}
+
+# Terms filter
+GET /website/blog/_search
+{
+  "filter": {
+    "terms": {
+      "tag": ["IT"]
+    }
+  }
+}
+
+# Range filters
+GET /website/blog/_search
+{
+  "query": {
+    "match": {
+      "name": "test"
+    }
+  },
+  "filter": {
+    "range": {
+      "user.age": {
+        "lte": 25,
+        "gte": 24
+      }
+    }
+  }
+}
+
+# Combining multiple clauses
+# must => and
+# should => or
+# must_not = not
+GET /website/blog/_search?explain
+{
+  "query": {
+    "bool": {
+      "should": [
+        {
+          "match": {
+            "name": "test3"
+          }
+        },
+        {
+          "match": {
+            "title": "my"
+          }
+        }
+      ]
+    }
+  }
+}
+
+# Understanding error
+GET /_validate/query?explain
+{
+   "query": {
+      "title" : {
+         "match" : "really powerful"
+      }
+   }
+}
+
+# Understanding how to tokenize
+GET /_validate/query?explain
+{
+   "query": {
+      "match" : {
+         "text" : "really powerful"
+      }
+   }
+}
+
+GET /_validate/query?explain
+{
+   "query": {
+      "match" : {
+         "date" : "2015-03-05"
+      }
+   }
+}
+
+GET /website/_settings
+
+GET /website/blog/2
+
+GET /website/_search
+
+GET /website/blog/_search?q=
+
+GET /website/_mapping
+
+# explain how the _score was calculated to every result
+GET /website/_search?explain&q=
+
+DELETE /website
+
+PUT /website
+{
+  "mappings": {
+    "blog": {
+      "include_in_all": false,
+      "properties": {
+        "tag": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "content": {
+          "type": "string",
+          "analyzer": "english",
+          "include_in_all": true
+        }
+      }
+    }
+  }
+}

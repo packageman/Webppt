@@ -1,0 +1,30 @@
+.tiny-font {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.small-text {
+  font-size: 19px;
+}
+
+.middle-text {
+  font-size: 25px;
+}
+
+.green-font {
+  color: green;
+}
+
+.left {
+  float: left;
+}
+
+.clearfix {
+  clear: both;
+  height: 20px;
+}
+
+.center {
+  text-align: center;
+  font-weight: bold;
+}
