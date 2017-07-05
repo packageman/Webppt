@@ -13,8 +13,8 @@ files: /js/yii2.js,/css/yii2.css
 
 ## About Yii
 ----
-Yii is a high performance, **component-based** PHP framework for rapidly developing modern Web applications.
- The name Yii (pronounced Yee or [ji:]) means **"simple and evolutionary"** in Chinese. It can also be thought
+- high performance **component-based** PHP framework for rapidly developing modern Web applications.
+- The name Yii (pronounced Yee or [ji:]) means **"simple and evolutionary"** in Chinese. It can also be thought
  of as an acronym for **Yes It Is!**
 
 [slide]
@@ -30,8 +30,7 @@ Yii is a high performance, **component-based** PHP framework for rapidly develop
 
 ## Model
 ----
-- scenarios() {:&.bounceIn}
-- attributes()
+- attributes() {:&.bounceIn}
 - safeAttributes()
 - rules()
 - fields()
@@ -214,7 +213,8 @@ Configuration Format
 
 ## Service Locator
 ----
-Why we can use component like **\Yii::$app->xxx**?
+- Why we can use component like **\Yii::$app->xxx**? {:&.fadeIn}
+- That is what Service Locator does (an object that provide all sorts of services (or components) that an application might need).
 
 [slide]
 
@@ -243,7 +243,6 @@ Why we can use component like **\Yii::$app->xxx**?
 - **Routing** and URL Creation
 - Requests
 - Response
-- Sessions and Cookies
 - Handling Errors
 - **Logging**
 
@@ -275,7 +274,7 @@ Why we can use component like **\Yii::$app->xxx**?
 ## Routing - step 1
 ----
 1. Default URL
-    - Getting the value of a `GET` query parameter named `r`
+    - <s>Getting the value of a `GET` query parameter named `r`</s>
 2. Pretty URL
     - URL manager examine the registered **URL rules** to find matching one that can resolve the request into a route
 
@@ -613,8 +612,12 @@ foreach($customers as $customer) {
 
 ## Data migration
 ----
-- `./yii test/migration/perform`
-- `./yii test/migration/perform $migrationNmae`
+
+[slide]
+
+## API Testing
+----
+- [Codeception](http://codeception.com/docs/)
 
 [slide]
 
@@ -636,4 +639,4 @@ foreach($customers as $customer) {
 [slide]
 
 ----
-# Thanks For Listening
+# Thanks
