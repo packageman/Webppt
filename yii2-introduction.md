@@ -109,7 +109,7 @@ files: /js/yii2.js,/css/yii2.css
 ----
 - Built-in components {:&.fadeIn}
 
-    <span class="text-danger">id, basePath,</span> urlManager, log, cache, i18n, response... {:.text-primary}
+    urlManager, log, cache, i18n, response... {:.text-primary}
 - Custom components
 
     mail, qiniu, job, weConnect, tuisongbao... {:.text-primary}
