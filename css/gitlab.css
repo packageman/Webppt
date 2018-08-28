@@ -1,0 +1,50 @@
+.tiny-font {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.small-text {
+  font-size: 19px;
+}
+
+.middle-text {
+  font-size: 25px;
+}
+
+.green-font {
+  color: green;
+}
+
+.left {
+  float: left;
+}
+
+.clearfix {
+  clear: both;
+  height: 20px;
+}
+
+.center {
+  text-align: center;
+  font-weight: bold;
+}
+
+/* .slides .slide {
+  background-color: #487bd3;
+} */
+
+#continuous-integration ul li:nth-child(4) {
+  list-style-type: none;
+}
+
+#continuous-delivery ul li:nth-child(4) {
+  list-style-type: none;
+}
+
+#continuous-deployment ul li:nth-child(4) {
+  list-style-type: none;
+}
+
+#pipeline ul li:nth-child(3) {
+  list-style-type: none;
+}
